@@ -1,0 +1,14 @@
+﻿using AutoMapper;
+using BookStorApp.API.Data;
+using BookStoreApp.API.Models.Author;
+
+namespace BookStoreApp.API.Configurations
+{
+    public class MapperConfig : Profile
+    {
+        public MapperConfig() 
+        {
+            CreateMap<AuthorCreateDto, Author>().ReverseMap();
+        }
+    }
+}
