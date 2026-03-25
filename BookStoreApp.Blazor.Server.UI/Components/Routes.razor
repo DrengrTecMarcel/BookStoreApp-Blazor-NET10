@@ -1,0 +1,23 @@
+﻿@using BookStoreApp.Blazor.Server.UI.Components.Pages
+@using Microsoft.AspNetCore.Components.Authorization
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+                <NotAuthorized>
+                    @if (context.User?.Identity?.IsAuthenticated == false)
+                    {
+                        <RedirectToLogin />
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <p>You are not authorized to access this resource</p>
+                        </div>
+                    }
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        </Found>
+    </Router>
+</CascadingAuthenticationState>
