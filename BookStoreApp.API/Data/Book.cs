@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BookStorApp.API.Data;
+namespace BookStoreApp.API.Data;
 
 public partial class Book
 {
