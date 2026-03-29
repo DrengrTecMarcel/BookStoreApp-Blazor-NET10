@@ -1,0 +1,123 @@
+﻿@page "/books/create/"
+@attribute [Authorize(Roles = Roles.Administrator)]
+@inject IBookService bookService
+@inject IAuthorService authorService
+@inject NavigationManager navManager
+
+<h3>Create Book</h3>
+
+<EditForm Model="Book">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="from-group">
+        <lable for="title">Book Title</lable>
+        <InputText @bind-Value="Book.Title" class="form-control" id="tile" />
+    </div>
+    <br />
+    <div class="from-group">
+        <lable for="isbn">ISBN</lable>
+        <InputText @bind-Value="Book.Isbn" class="form-control" id="isbn" />
+    </div>
+    <br />
+    <div class="from-group">
+        <lable for="price">Price</lable>
+        <InputNumber @bind-Value="Book.Price" class="form-control" id="price" />
+    </div>
+    <br />
+    <div class="from-group">
+        <lable for="year">Year</lable>
+        <InputNumber @bind-Value="Book.Year" class="form-control" id="year" />
+    </div>
+    <br />
+    <div class="from-group">
+        <lable for="summary">Summary</lable>
+        <InputTextArea @bind-Value="Book.Summary" class="form-control" id="summary" />
+    </div>    
+    <br />
+    <div class="from-group">
+        <lable for="author">Author</lable>
+        <InputSelect @bind-Value="Book.AuthorId" class="form-control" id="author">
+            <option value="">-- Select Author --</option>
+            @foreach (var author in Authors)
+            {
+                <option value="@author.Id">@author.FirstName @author.LastName</option>
+            }
+        </InputSelect>
+    </div>
+    <br />
+    <div class="form-group">
+        <lable>Book Cover</lable>
+        <div>
+            <InputFile OnChange="HandleFileSelection" />
+            <img src="@img" width="100" height="30" class="img-thumbnail"/>
+            <p class="text-danger">@UploadFileWarning</p>
+        </div>
+    </div>
+    <br />
+    <button class="btn btn-primary" @onclick="HandleBookCreate" type="submit">Create Book</button>
+    <button class=" btn btn-outline-secondary" @onclick="BackToList" type="button">Back To List</button>
+</EditForm>
+
+@code {
+
+    private BookCreateDto Book = new BookCreateDto();
+    private List<AuthorReadOnlyDto> Authors = new();
+
+    private string img = string.Empty;
+    private string UploadFileWarning = string.Empty;
+
+    //max File Size = 5MB
+    private long maxFileSize = 1024 * 1024 * 5;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var response = await authorService.GetAuthor();
+        if (response.Success)
+        {
+            Authors = response.Data;
+        }
+        
+    }
+
+    private async Task HandleBookCreate() 
+    {
+        var response = await bookService.CreateBook(Book);
+        if (response.Success)
+        {
+            BackToList();
+        }
+    }
+
+    private async Task HandleFileSelection(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            if (file.Size > maxFileSize)
+            {
+                UploadFileWarning = "This file is to big for upload\nmaximum: 5MB";
+                return;
+            }
+
+            var ext = System.IO.Path.GetExtension(file.Name);
+            if ((ext.ToLower().Contains("jpg") || ext.ToLower().Contains("png") || ext.ToLower().Contains("jpeg")) == false)
+            {
+                UploadFileWarning = "Please select a valid image file (*.jpg | *.png)";
+                return;
+            }
+            var byteArray = new byte[file.Size];
+            await file.OpenReadStream().ReadAsync(byteArray);
+            string imageType = file.ContentType;
+            string base64Srting = Convert.ToBase64String(byteArray);
+
+            Book.ImageData = base64Srting;
+            Book.OriginalImageName = file.Name;
+            img = $"data:{imageType}; base64, {base64Srting}";
+        }
+    }
+
+    private void BackToList()
+    {
+        navManager.NavigateTo("/books/");
+    }
+}

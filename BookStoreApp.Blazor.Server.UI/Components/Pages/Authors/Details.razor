@@ -34,24 +34,26 @@
     }
     else
     {
-        foreach (var book in Author.Books)
-        {
-            <div class="card" style="width: 18rem;">
-                <img src="@book.Iamge" class="card-img-top" alt="@book.Title" />
-                <div class="card-body">
-                    <h5 class="card-title">@book.Title - @book.Price.ToString("C")</h5>
-                    <p class="card-text"></p>
-                    <a href="#" class="btn btn-primary">Book View</a>
-                </div>
-            </div>
-        }          
+        <div class="row">
+            @foreach (var book in Author.Books)
+            {
+                <div class="col-3">
+                    <div class="card" style="width:202px; height:400px 18rem;">
+                        <img src="@book.Image" class="card-img-top" alt="@book.Title" style="width:200px; height:300px"/>
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <h5>@book.Price.ToString("C")</h5>
+                            <p class="card-text"></p>
+                            <a href="/books/details/@book.Id" class="btn btn-primary">Book View</a>
+                        </div>
+                    </div>
+                </div>           
+            }
+        </div>                  
     }
-
-    <AuthorizeView Roles="Administrator">
-        <button class="btn btn-outline-warning" @onclick="GoToUpdate">Update</button>
-    </AuthorizeView>
-    <button class="btn btn-outline-secondary" @onclick="BackToList">Back To List</button>
-
+    <br />
+    <button class="btn btn-outline-warning" @onclick="GoToUpdate" type="button">Update</button>
+    <button class="btn btn-outline-secondary" @onclick="BackToList" type="button">Back To List</button>
 </EditForm>
 
 @code {

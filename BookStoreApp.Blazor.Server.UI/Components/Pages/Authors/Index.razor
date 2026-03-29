@@ -40,7 +40,7 @@ else
                     <th>
                         <a class="btn btn-primary" href="/authors/details/@author.Id">Details</a>
                         <AuthorizeView Roles="Administrator">
-                            <a class="btn btn-warning" href="/authors/Update/@author.Id">Update</a>
+                            <a class="btn btn-warning" href="/authors/update/@author.Id">Update</a>
                             <button class="btn btn-danger" @onclick=@(() => Delete(author.Id))>Delete</button>
                         </AuthorizeView>
                     </th>

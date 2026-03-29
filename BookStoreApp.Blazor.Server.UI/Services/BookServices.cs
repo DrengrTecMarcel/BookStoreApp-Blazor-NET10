@@ -5,25 +5,24 @@ using BookStoreApp.Blazor.Server.UI.Services.Base;
 
 namespace BookStoreApp.Blazor.Server.UI.Services
 {
-
-    public class AuthorServices : BaseHttpService, IAuthorService
+    public class BookServices : BaseHttpService, IBookService
     {
         private readonly IClient client;
         private readonly IMapper mapper;
 
-        public AuthorServices(IClient client, IMapper mapper, ILocalStorageService localStorage) : base(client, localStorage)
+        public BookServices(IClient client, IMapper mapper, ILocalStorageService localStorage) : base(client, localStorage)
         {
             this.client = client;
             this.mapper = mapper;
         }
 
-        public async Task<Response<int>> CreateAuthor(AuthorCreateDto author)
+        public async Task<Response<int>> CreateBook(BookCreateDto book)
         {
             Response<int> response = new();
             try
             {
                 await GetBearerToken();
-                await client.AuthorsPOSTAsync(author);
+                await client.BooksPOSTAsync(book);
             }
             catch (ApiException exeption)
             {
@@ -32,13 +31,13 @@ namespace BookStoreApp.Blazor.Server.UI.Services
             return response;
         }
 
-        public async Task<Response<int>> Delete(int id)
+        public async Task<Response<int>> DeleteBook(int id)
         {
             Response<int> response = new();
             try
             {
                 await GetBearerToken();
-                await client.AuthorsDELETEAsync(id);
+                await client.BooksDELETEAsync(id);
             }
             catch (ApiException exeption)
             {
@@ -47,13 +46,13 @@ namespace BookStoreApp.Blazor.Server.UI.Services
             return response;
         }
 
-        public async Task<Response<int>> EditAuthor(int id, AuthorUpdateDto author)
+        public async Task<Response<int>> EditBook(int id, BookUpdateDto book)
         {
             Response<int> response = new();
             try
             {
                 await GetBearerToken();
-                await client.AuthorsPUTAsync(id, author);
+                await client.BooksPUTAsync(id, book);
             }
             catch (ApiException exeption)
             {
@@ -62,14 +61,14 @@ namespace BookStoreApp.Blazor.Server.UI.Services
             return response;
         }
 
-        public async Task<Response<List<AuthorReadOnlyDto>>> GetAuthor()
+        public async Task<Response<List<BookReadOnlyDto>>> GetBook()
         {
-            Response<List<AuthorReadOnlyDto>> response;
+            Response<List<BookReadOnlyDto>> response;
             try
             {
                 await GetBearerToken();
-                var data = await client.AuthorsAllAsync();
-                response = new Response<List<AuthorReadOnlyDto>>
+                var data = await client.BooksAllAsync();
+                response = new Response<List<BookReadOnlyDto>>
                 {
                     Data = data.ToList(),
                     Success = true
@@ -77,20 +76,20 @@ namespace BookStoreApp.Blazor.Server.UI.Services
             }
             catch (ApiException exeption)
             {
-                response = ConvertApiExceptions<List<AuthorReadOnlyDto>>(exeption);
+                response = ConvertApiExceptions<List<BookReadOnlyDto>>(exeption);
             }
 
             return response;
         }
-
-        public async Task<Response<AuthorDetailsDto>> GetAuthor(int id)
+       
+        public async Task<Response<BookDetailsDto>> GetBook(int id)
         {
-            Response<AuthorDetailsDto> response;
+            Response<BookDetailsDto> response;
             try
             {
                 await GetBearerToken();
-                var data = await client.AuthorsGETAsync(id);
-                response = new Response<AuthorDetailsDto>
+                var data = await client.BooksGETAsync(id);
+                response = new Response<BookDetailsDto>
                 {
                     Data = data,
                     Success = true
@@ -98,28 +97,28 @@ namespace BookStoreApp.Blazor.Server.UI.Services
             }
             catch (ApiException exeption)
             {
-                response = ConvertApiExceptions<AuthorDetailsDto>(exeption);
+                response = ConvertApiExceptions<BookDetailsDto>(exeption);
             }
 
             return response;
         }
 
-        public async Task<Response<AuthorUpdateDto>> GetUpdateForAuthors(int id)
+        public async Task<Response<BookUpdateDto>> GetUpdateForBook(int id)
         {
-            Response<AuthorUpdateDto> response;
+            Response<BookUpdateDto> response;
             try
             {
                 await GetBearerToken();
-                var data = await client.AuthorsGETAsync(id);
-                response = new Response<AuthorUpdateDto>
+                var data = await client.BooksGETAsync(id);
+                response = new Response<BookUpdateDto>
                 {
-                    Data = mapper.Map<AuthorUpdateDto>(data),
+                    Data = mapper.Map<BookUpdateDto>(data),
                     Success = true
                 };
             }
             catch (ApiException exeption)
             {
-                response = ConvertApiExceptions<AuthorUpdateDto>(exeption);
+                response = ConvertApiExceptions<BookUpdateDto>(exeption);
             }
 
             return response;

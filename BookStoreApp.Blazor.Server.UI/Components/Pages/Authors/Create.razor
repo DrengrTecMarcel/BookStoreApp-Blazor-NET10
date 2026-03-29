@@ -25,8 +25,8 @@
         <ValidationMessage For="@(() => Author.Bio)" />
     </div>
     <br />
-    <button class="btn btn-primary" @onclick="HandleCreateAuthor">Create Author</button>
-    <button class="btn btn-outline-secondary" @onclick="BackToList">Back To List</button>
+    <button class="btn btn-primary" @onclick="HandleCreateAuthor" type="submit">Create Author</button>
+    <button class="btn btn-outline-secondary" @onclick="BackToList"type="button">Back To List</button>
 
 </EditForm>
 @code {
