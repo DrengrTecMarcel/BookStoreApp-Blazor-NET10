@@ -14,6 +14,7 @@ namespace BookStoreApp.Blazor.WebAssembly.UI.Services.Authentication
         public AuthenticationService(IClient httpClient, ILocalStorageService localStorage, AuthenticationStateProvider authenticationStateProvider)
         {
             this.httpClient = httpClient;
+            
             this.localStorage = localStorage;
             this.authenticationStateProvider = authenticationStateProvider;
         }

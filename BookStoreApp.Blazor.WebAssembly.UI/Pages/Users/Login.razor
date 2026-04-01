@@ -21,6 +21,10 @@
         </div>
         <br />
         <button class="btn btn-primary btn-block" @onclick="HandleLogin">Login</button>
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <div class="alert alert-danger mt-2">@message</div>
+        }
     </EditForm>
 </div>
 
@@ -42,12 +46,16 @@
             message = "Invalid Credentials, Please Try Again";
         }
         catch (ApiException ex)
-        {
+        {   
             if (ex.StatusCode >= 200 && ex.StatusCode <= 299)
             {
-                
+               
             }
             message = ex.Response;
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
         }
     }
 }

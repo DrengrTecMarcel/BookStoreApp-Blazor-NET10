@@ -14,7 +14,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7092") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:44378") });
 
 builder.Services.AddBlazoredLocalStorage();
 
@@ -23,13 +23,11 @@ builder.Services.AddScoped<AuthenticationStateProvider>(p =>
                 p.GetRequiredService<ApiAuthenticationStateProvider>());
 builder.Services.AddAuthorizationCore();
 
-builder.Services.AddHttpClient<IClient, Client>();
+builder.Services.AddHttpClient<IClient, Client>(c => c.BaseAddress = new Uri("https://localhost:44378"));
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IAuthorService, AuthorServices>();
 builder.Services.AddScoped<IBookService, BookServices>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
-
-
 
 await builder.Build().RunAsync();
