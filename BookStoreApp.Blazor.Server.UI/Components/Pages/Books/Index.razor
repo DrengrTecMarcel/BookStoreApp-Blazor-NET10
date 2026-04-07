@@ -23,63 +23,27 @@ else
         <a class="btn btn-dark" href="/books/create">Create</a>
     </AuthorizeView>
     <br />
-    <table class="table table-responsive">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Titel</th>
-                <th>Price</th>
-                <th>Author Name</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var book in Books)
-            {
-                <tr>
-                    <td>
-                        <img src="@book.Image" width="100" height="100" alt="@book.Title" />
-                    </td>
-                    <td>@book.Title</td>
-                    <td>@book.Price.ToString("C")</td>
-                    <td><a class="btn btn-link" href="/authors/details/@book.AuthorId">@book.AuthorName</a></td>
-                    <td>
-                        <a class="btn btn-primary" href="/books/details/@book.Id">Details</a>
-                        <AuthorizeView Roles="Administrator">
-                            <a class="btn btn-warning" href="/books/Update/@book.Id">Update</a>
-                            <button class="btn btn-danger" @onclick=@(() => DeleteBook(book.Id))>Delete</button>
-                        </AuthorizeView>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <BookTable Books="Books" TotalSize="TotalSize" OnScroll="LoadBooks" />
 }
 
 @code {
     private List<BookReadOnlyDto> Books;
-    private Response<List<BookReadOnlyDto>> response = new Response<List<BookReadOnlyDto>> { Success = true };
+    public int TotalSize { get; set; }
+    private Response<BookReadOnlyDtoVirtulalizeResponse> response = new Response<BookReadOnlyDtoVirtulalizeResponse> { Success = true };
 
     protected override async Task OnInitializedAsync()
     {
-        response = await bookService.GetBook();
+        response = await bookService.GetBook(new QueryParameters { StartIndex = 0 });
         if (response.Success)
         {
-            Books = response.Data;
+            Books = response.Data.Items.ToList();
         }
     }
 
-    private async Task DeleteBook(int bookId)
+    private async Task LoadBooks(QueryParameters queryParams)
     {
-        var book = Books.First(q => q.Id == bookId);
-        var confirm = await js.InvokeAsync<bool>("confirm", $"Are You Surer You Want To Delete {book.Title}?");
-        if (confirm)
-        {
-            var response = await bookService.DeleteBook(bookId);
-            if (response.Success)
-            {
-                await OnInitializedAsync();
-            }
-        }
+        var virtualizeResult = await bookService.GetBook(queryParams);
+        Books = virtualizeResult.Data.Items.ToList();
+        TotalSize = virtualizeResult.Data.TotalSize;
     }
 }

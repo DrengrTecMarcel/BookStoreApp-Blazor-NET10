@@ -1,0 +1,30 @@
+﻿
+<h3>AuthorTable</h3>
+
+<table class="table table-responsive">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <Virtualize ItemsProvider="LoadAuthors" Context="author">
+            <tr>
+                <th>@author.FirstName</th>
+                <th>@author.LastName</th>
+                <th>
+                    <a class="btn btn-primary" href="/authors/details/@author.Id">Details</a>
+                    <AuthorizeView Roles="Administrator">
+                        <a class="btn btn-warning" href="/authors/update/@author.Id">Update</a>
+                        <button class="btn btn-danger" @onclick=@(() => Delete(author.Id))>Delete</button>
+                    </AuthorizeView>
+                </th>
+            </tr>
+        </Virtualize>
+    </tbody>
+</table>
+
+
+

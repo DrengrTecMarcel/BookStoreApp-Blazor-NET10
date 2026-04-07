@@ -1,9 +1,12 @@
-﻿using BookStoreApp.Blazor.WebAssembly.UI.Services.Base;
+﻿using BookStoreApp.Blazor.WebAssembly.UI.Models;
+using BookStoreApp.Blazor.WebAssembly.UI.Services.Base;
 
 namespace BookStoreApp.Blazor.WebAssembly.UI.Services
 {
     public interface IBookService
     {
+        Task<Response<BookReadOnlyDtoVirtulalizeResponse>> GetBook(QueryParameters queryParams);
+
         Task<Response<List<BookReadOnlyDto>>> GetBook();
 
         Task<Response<BookDetailsDto>> GetBook(int id);

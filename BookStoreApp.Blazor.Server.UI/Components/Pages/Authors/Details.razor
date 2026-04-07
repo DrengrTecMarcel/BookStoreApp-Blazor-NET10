@@ -54,21 +54,24 @@
     <br />
     <button class="btn btn-outline-warning" @onclick="GoToUpdate" type="button">Update</button>
     <button class="btn btn-outline-secondary" @onclick="BackToList" type="button">Back To List</button>
+    
 </EditForm>
 
 @code {
     [Parameter]
     public int id { get; set; }
+    
 
     private AuthorDetailsDto Author = new AuthorDetailsDto();
 
     protected async override Task OnInitializedAsync()
     {
-        var response = await authorService.GetAuthor(id);
+        var response = await authorService.GetAuthor(id); 
         if (response.Success)
         {
-            Author = response.Data;
+            Author = response.Data;                 
         }
+        
     }
 
     private void BackToList()
